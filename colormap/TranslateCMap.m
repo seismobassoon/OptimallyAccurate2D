@@ -14,8 +14,6 @@ function TranslateCMap
         temp(i,3) = A.data(4*(i-1)+3)*255;
         temp(i,4) = A.data(4*(i-1)+4)*255;
     end
-
     columnum = length(A.data)/4;
-
     save('colormap.dat','columnum','temp','-ascii');
 end
