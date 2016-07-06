@@ -4,7 +4,7 @@ program = $(BIN)/multiOPT.x
 program2 = $(BIN)/modelgen.x
 program3 = $(BIN)/frechetKernel.x
 include ../etc/config.h
-objs =  cales_sinc.o modules.o others.o vectors.o disconConfig.o seismicSources.o videos.o   cales.o cales_discon.o cales_free.o sub.inverse.o calmat.o OPT2D.o
+objs =   modules.o others.o vectors.o disconConfig.o seismicSources.o videos.o   cales.o cales_discon.o cales_free.o sub.inverse.o calmat.o OPT2D.o
 objs2 = modelgenerator.o
 objs3 = frechetKernel.o modules.o others.o vectors.o videos.o 
 
