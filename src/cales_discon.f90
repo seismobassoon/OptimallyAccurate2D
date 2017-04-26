@@ -1084,8 +1084,11 @@ subroutine calstep_discon( nx,nz, &
        enddo
     enddo
      ux(isx,isz) = ux(isx,isz) + fx(isx,isz)
-     uz(isx,isz) = uz(isx,isz) + fz(isx,isz)
+     uz(isx,isz) = uz(isx,isz) + fz(isx,isz)     
  endif
+
+
+
 
  ! swapping u1 & u2 
  do iz=2,nz

@@ -24,8 +24,9 @@ subroutine calf( nx,nz,it,t,ist,isx,isz,dt,dx,dz,rho,tp,ts,fx,fz )
   endif
 
   ! NF for point source
-  !fx(isx,isx)=0.d0
-  
+  fx(isx,isz)=0.d0
+  fz(isx,isz)=fz(isx,isz)*1.d4  
+
   return
 end subroutine calf
 

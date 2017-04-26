@@ -1,0 +1,21 @@
+MarmousiOPT
+../models/marmousi_vp
+../models/marmousi_vs
+../models/marmousi_rho
+T optimise or conventional
+T video or not
+T writingStrain
+10 IT_DISPLAY
+5 10 30  iSourceStart, iSourceInverval, nSource
+1 izSourceStart
+5 10 30 iReceiverStart, iReceiverInterval, nReceiver
+1 izReceiverStart
+3900 299 99 nt nx nz
+1.d-3 2.5d-2 2.5d-2 dt,dx,dz
+6.5d0 5.d-2 f0, t0
+0 0 i1Source, i2Source
+/Users/fujinobuaki/git/OptimallyAccurate2D/MarmousiVrai
+OBS_UX
+OBS_UZ
+0
+1.0 1.0

@@ -36,7 +36,7 @@ module parameters
   ! parameters for the gridding
   double precision dt,dx,dz
   ! parameters for the wavefield
-  integer nt,nx,nz,it,ist,isx,isz,ix,iz,recl_size
+  integer nt,nx,nz,it,ist,isx,isz,ix,iz,recl_size,recl_size_syn
   ! Attention ! nx and nz are modified with absorbing boundaries
   double precision, allocatable, dimension(:,:) :: ux,uz,ux1,ux2,uz1,uz2
   double precision, allocatable, dimension(:,:) :: e1,e2,e3,e4,e5,e6,e7,e8
@@ -63,7 +63,7 @@ module parameters
   
   ! parameter for the receiver
   integer :: ir,j
-  real, allocatable, dimension(:,:) :: synx,synz
+  real(kind(0e0)), allocatable, dimension(:,:) :: synx,synz
   real, allocatable, dimension(:) :: time
   character(200) :: outfile
  
@@ -84,7 +84,7 @@ module parameters
   logical, parameter :: USE_PML_YMIN = .true.
   logical, parameter :: USE_PML_YMAX = .true.
   ! thickness of the PML layer in grid points
-  integer, parameter :: NPOINTS_PML = 100*times
+  integer, parameter :: NPOINTS_PML = 50*times
   double precision, parameter :: CerjanRate = 0.0015
   double precision, allocatable, dimension(:,:) :: weightBC
   ! Cerjan boundary condition
@@ -132,7 +132,7 @@ module parameters
   real(kind(0e0)), allocatable, dimension(:,:):: singleStrainDiagonal,singleStrainShear,tmpsingleStrain
 
   
-  character(340) :: commandline
+  character(440) :: commandline
   
 
   
@@ -149,5 +149,28 @@ module paramFrechet
   real, allocatable, dimension(:,:) :: singleKernelP,singleKernelS
   double precision, allocatable, dimension (:,:) :: strainForward,strainBack
   double precision, allocatable, dimension (:,:) :: kernelP,kernelS
-  
+  double precision, allocatable, dimension (:,:) :: kernelPtotal,kernelStotal
+
+
 end module paramFrechet
+
+
+module paramFWI
+  
+  implicit none
+  integer :: i1Source, i2Source ! 2 sources for cross correlations
+  integer :: isx1,isx2,isz1,isz2,it1,it2
+  real, allocatable, dimension(:,:) :: singleStrainForward,singleStrainBack
+  real, allocatable, dimension(:,:) :: singleKernelP,singleKernelS
+  double precision, allocatable, dimension (:,:) :: strainForward,strainBack
+  double precision, allocatable, dimension (:,:) :: kernelP,kernelS
+  character(180) :: obsdir
+  character(20) :: extentionOBSx,extentionOBSz
+  ! extentions:  if 9999 we do not take the component
+  integer :: iterationIndex,numberIteration
+  double precision :: numeratorG, denominatorG
+  double precision :: steplengthVp, steplengthVs
+  double precision :: alphaVp, alphaVs ! these are real steplengths
+  real(kind(0e0)), allocatable, dimension(:,:) :: obsx,obsz
+  real(kind(0e0)), allocatable, dimension(:,:) :: delx,delz
+end module paramFWI

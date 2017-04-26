@@ -28,8 +28,9 @@ program multipleSourcesOPT2D
   
   call vectorAllocate
   
-  call disconConfig ! discontinuity configuration
-  
+  !call disconConfig ! discontinuity configuration
+   ! no discon
+
   call ReceiverSourcePositions 
 
   !!!! for each source we calculate synthetics
@@ -40,7 +41,8 @@ program multipleSourcesOPT2D
   call calstruct( maxnx,maxnz,vpfile, nx,nz,vp )
   call calstruct( maxnx,maxnz,vsfile, nx,nz,vs )
     
-  call freeConfig
+  ! call freeConfig
+  ! no free
 
   ! calculate lamda and mu
   call calstruct2(maxnx,maxnz,nx,nz,rho,vp,vs,lam,mu,liquidmarkers)
@@ -55,8 +57,6 @@ program multipleSourcesOPT2D
 
 
   ! Smoothed version of CONV/OPT operators
- 
-  print *, "nx,nz",nx, nz,maxnx,maxnz
 
   call cales( nx,nz,rho,lam,mu,dt,dx,dz, &
        e1, e2, e3, e4, e5, e6, e7, e8, &
@@ -80,6 +80,8 @@ program multipleSourcesOPT2D
   ff78 = 0.d0
   ff87 = 0.d0
   
+  if(1.eq.0) then
+
   if(nDiscon.ne.0) then
  
      ! changing dscr by putting lmargin(1) and (2)
@@ -118,7 +120,6 @@ program multipleSourcesOPT2D
   endif
 
 
-
   if(lengthFreeSurface.ne.0) then
      ! changing free by putting lmargin(1) and (2)
      tmpvaluex=dble(lmargin(1))*dx
@@ -128,6 +129,9 @@ program multipleSourcesOPT2D
            free(1,ix)=free(1,ix)+tmpvaluex
            free(2,ix)=free(2,ix)+tmpvaluez           
      enddo
+  endif
+
+
   endif
 
   ! for Cerjan absorbing boundary
@@ -190,7 +194,7 @@ program multipleSourcesOPT2D
        
         call calf2( nx,nz,it,t,ist,isx,isz,dt,dx,dz,rho(isx,isz),f0,t0,fx,fz )
         t=t+dt
-        write(13,*) t, fx(isx,isz),fz(isx,isz)
+        !write(13,*) t, fx(isx,isz),fz(isx,isz)
         
      enddo
      !print *, maxnz,it,t,ist,isx,isz,dt,dx,dz,rho(isx,isz),f0,t0
@@ -223,6 +227,8 @@ program multipleSourcesOPT2D
         !        work(1,23),work(1,24),work(1,28),work(1,29), optimise)
            
         !else
+
+        if(1.eq.0) then
            call calstep_discon( nx,nz, &
                 e1, e2, e3, e4, e5, e6, e7, e8, &
                 e13,e14,e15,e16,e17,e18,e19,e20, &
@@ -235,8 +241,23 @@ program multipleSourcesOPT2D
                 ! Hereafter are new variables for cales_discon
                 ee12,ee34,ee56,ee65,ee78,ee87, &
                 ff12,ff34,ff56,ff65,ff78,ff87)
-           
+        endif
 
+
+
+        call calstep( nx,nz, &
+             e1, e2, e3, e4, e5, e6, e7, e8, &
+             e13,e14,e15,e16,e17,e18,e19,e20, &
+             f1, f2, f3, f4, f5, f6, f7, f8, &
+             f13,f14,f15,f16,f17,f18,f19,f20, &
+             ux,uz,ux1,ux2,uz1,uz2,isx,isz,fx,fz, &
+             work(1,1), work(1,5), work(1,9),work(1,13), &
+             work(1,17),work(1,18),work(1,20),work(1,21), &
+             work(1,23),work(1,24),work(1,28),work(1,29), optimise, & 
+             ! Hereafter are new variables for cales_discon
+             ee12,ee34,ee56,ee65,ee78,ee87, &
+             ff12,ff34,ff56,ff65,ff78,ff87)
+        
         !endif
 
 

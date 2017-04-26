@@ -54,6 +54,11 @@ program generator
  allocate (fullvp (NX_TOTAL, NZ_TOTAL) )
  allocate (fullvs (NX_TOTAL, NZ_TOTAL) )
  allocate (fullrho(NX_TOTAL, NZ_TOTAL) )
+
+
+
+
+
  !allocate(tmpM(NZ_TOTAL,NX_TOTAL))
  if(0.eq.1) then
  open(1,file='./models/model_cp_400x200.txt',form='formatted')
@@ -155,7 +160,7 @@ program generator
           endif
        enddo
     enddo
-     write(14,*)fullvp(1:400,1:200)
+     write(14,*) fullvp(1:400,1:200)
 
  endif
 
@@ -164,9 +169,12 @@ program generator
 
 !****************************************************************	   
  
- open (1,file='../models/2d_guy.vp',form='unformatted',access='direct',recl=recl_size)
- open (2,file='../models/2d_guy.vs',form='unformatted',access='direct',recl=recl_size) 
- open (3,file='../models/2d_guy.rho',form='unformatted',access='direct',recl=recl_size)
+ open (1,file='../models/2d_anais.vp',form='unformatted',access='direct',recl=recl_size)
+ open (2,file='../models/2d_anais.vs',form='unformatted',access='direct',recl=recl_size) 
+ open (3,file='../models/2d_anais.rho',form='unformatted',access='direct',recl=recl_size)
+
+
+
 
  if(0.eq.0) then
     tmp=1

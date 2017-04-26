@@ -1,0 +1,16 @@
+anais
+../models/2d_anais.vp
+../models/2d_anais.vs
+../models/2d_anais.rho
+T optimise or conventional
+T video or not
+F writingStrain
+10 IT_DISPLAY
+1199 20 1  iSourceStart, iSourceInverval, nSource
+1201 izSourceStart
+1 20 79 iReceiverStart, iReceiverInterval, nReceiver
+1 izReceiverStart
+30000 1588 1600 nt nx nz
+5.d0 5.d2 5.d2 dt,dx,dz
+0.05d0 10.d0 f0, t0
+1 20 i1Source, i2Source

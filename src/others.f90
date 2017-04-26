@@ -27,7 +27,7 @@ subroutine paramMultiReader
   dt=dt/dble(times)
   dx=dx/dble(times)
   dz=dz/dble(times)
-  
+ 
   maxnt = nt
   maxnx = nx+(lmargin(1)+rmargin(1))
   maxnz = nz+(lmargin(2)+rmargin(2))
@@ -106,6 +106,19 @@ subroutine paramFrechetReader
   call system(commandline)
   commandline="mkdir kernelSsnapshots"
   call system(commandline)
+  
+  commandline="mkdir kernelPbinaries" ! we need kernelsP/Sbinaries folders too
+  call system(commandline)
+  commandline="mkdir kernelSbinaries"
+  call system(commandline)
+
+
+  commandline="mkdir kernelPbinaries/"//trim(modelname) ! we need kernelsP/Sbinaries folders too
+  call system(commandline)
+  commandline="mkdir kernelSbinaries/"//trim(modelname)
+  call system(commandline)
+
+
   commandline="mkdir videos"
   call system(commandline)
   commandline="mkdir synthetics/"//trim(modelname)
@@ -116,7 +129,87 @@ subroutine paramFrechetReader
   call system(commandline)
   commandline="mkdir strains/"//trim(modelname)
   call system(commandline)
+
+
+
+
 end subroutine paramFrechetReader
+
+
+subroutine paramFWIReader
+  use parameters
+  use paramFWI
+  implicit none
+  character (180) dummy
+  ! Reading Inf File
+110 format(a80)
+120 format(a180)
+130 format(a20)
+  read(5,110) modelname
+  read(5,110) vpfile
+  read(5,110) vsfile
+  read(5,110) rhofile
+  read(5,'(L1)') optimise
+  read(5,'(L1)') videoornot
+  read(5,'(L1)') writingStrain
+  read(5,*) IT_DISPLAY
+  read(5,*) iSourceStart,iSourceInterval,nSource
+  read(5,*) izSourceStart
+  read(5,*) iReceiverStart,iReceiverInterval,nReceiver
+  read(5,*) izReceiverStart
+  read(5,*) nt,nx,nz
+  read(5,*) dt,dx,dz
+  read(5,*) f0, t0
+  ! Frechet needs some more infos here
+  read(5,120) dummy
+  read(5,120) obsdir
+  read(5,130) extentionOBSx ! if 9999, we do not take x component
+  read(5,130) extentionOBSz ! if 9999, we do not take z component
+  read(5,*) numberIteration
+  read(5,*) steplengthVp, steplengthVs
+
+  nt=nt*times
+  nx=nx*times
+  nz=nz*times
+  dt=dt/dble(times)
+  dx=dx/dble(times)
+  dz=dz/dble(times)
+  
+  maxnt = nt
+  maxnx = nx+(lmargin(1)+rmargin(1))
+  maxnz = nz+(lmargin(2)+rmargin(2))
+
+
+  
+ 
+  call system('mkdir ./inffile')
+
+  commandline="mkdir ./iteratedModels" 
+  call system(commandline)
+  commandline="mkdir synthetics"
+  call system(commandline)
+  commandline="mkdir snapshots"
+  call system(commandline)
+  commandline="mkdir kernelPsnapshots" ! we need kernelsnapshots folders too
+  call system(commandline)
+  commandline="mkdir kernelSsnapshots"
+  call system(commandline)
+  commandline="mkdir gradientPsnapshots" ! we need kernelsnapshots folders too
+  call system(commandline)
+  commandline="mkdir gradientSsnapshots"
+  call system(commandline)
+  commandline="mkdir videos"
+  call system(commandline)
+  commandline="mkdir synthetics/"//trim(modelname)
+  call system(commandline)
+  commandline="mkdir videos/"//trim(modelname)
+  call system(commandline)
+  commandline="mkdir strains"
+  call system(commandline)
+  commandline="mkdir strains/"//trim(modelname)
+  call system(commandline)
+end subroutine paramFWIReader
+
 
 
 

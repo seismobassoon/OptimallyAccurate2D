@@ -1,0 +1,21 @@
+MarmousiOPT
+../models/marmousi_vp_sm
+../models/marmousi_vs_sm
+../models/marmousi_rho_sm
+T optimise or conventional
+T video or not
+T writingStrain
+10 IT_DISPLAY
+5 100 3  iSourceStart, iSourceInverval, nSource
+1 izSourceStart
+5 10 30 iReceiverStart, iReceiverInterval, nReceiver
+1 izReceiverStart
+3900 299 99 nt nx nz
+1.d-3 2.5d-2 2.5d-2 dt,dx,dz
+6.5d0 5.d-2 f0, t0
+1  1 i1Source, i2Source ! not necessary for FWI
+../Marmousi/synthetics/MarmousiOPT/tmp/
+OPT_UX
+OPT_UZ
+1
+1.e-3 1.e-3

@@ -62,6 +62,26 @@ subroutine vectorAllocate
 end subroutine vectorAllocate
 
 
+subroutine vectorAllocateFWI
+  use parameters
+  use paramFWI
+  implicit none
+  allocate(obsx(0:maxnt,1:nReceiver),obsz(0:maxnt,1:nReceiver)) ! observed
+  allocate(delx(0:maxnt,1:nReceiver),delz(0:maxnt,1:nReceiver)) ! difference
+  allocate(singleStrainForward(1:nx+1,1:nz+1))
+  allocate(singleStrainBack(1:nx+1,1:nz+1))
+  allocate(strainForward(1:nx+1,1:nz+1))
+  allocate(strainBack(1:nx+1,1:nz+1))
+
+  allocate(kernelP(1:nx+1,1:nz+1))
+  allocate(kernelS(1:nx+1,1:nz+1))
+  allocate(singleKernelP(1:nx+1,1:nz+1))
+  allocate(singleKernelS(1:nx+1,1:nz+1))
+
+  
+
+end subroutine vectorAllocateFWI
+
 subroutine vectorAllocateFrechet
   use paramFrechet
   use parameters
@@ -88,8 +108,12 @@ subroutine vectorAllocateFrechet
   allocate(kernelS(1:nx+1,1:nz+1))
   allocate(singleKernelP(1:nx+1,1:nz+1))
   allocate(singleKernelS(1:nx+1,1:nz+1))
-  
+  allocate(kernelPtotal(1:nx+1,1:nz+1))
+  allocate(kernelStotal(1:nx+1,1:nz+1))
 
+  allocate(rho(maxnx+1,maxnz+1))
+  allocate(vp(maxnx+1,maxnz+1))
+  allocate(vs(maxnx+1,maxnz+1))
   allocate(synx(0:maxnt,1:nReceiver),synz(0:maxnt,1:nReceiver),time(0:maxnt)) ! synthetics
 
   allocate(video(maxnx+1,maxnz+1))
