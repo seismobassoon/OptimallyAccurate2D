@@ -2,7 +2,8 @@ subroutine forwardmodelling
   use parameters
   use paramFWI
   implicit none
-
+   
+  print *, "forward modelling, nx, nz=", nx,nz
   
   ! record size
   recl_size=(nx+1-rmargin(1)-lmargin(1))*(nz+1-rmargin(2)-lmargin(2))*kind(0e0)
@@ -15,22 +16,23 @@ subroutine forwardmodelling
 
   ! NF is not using cales for circle free surface (KATAYAMA)
 
-  if(0.eq.1) then
+  !if(0.eq.1) then
   call cales( nx,nz,rho,lam,mu,dt,dx,dz, &
        e1, e2, e3, e4, e5, e6, e7, e8, &
        e13,e14,e15,e16,e17,e18,e19,e20, &
        f1, f2, f3, f4, f5, f6, f7, f8, &
        f13,f14,f15,f16,f17,f18,f19,f20 ) 
-   endif
+   !endif
 
   ! NF uses free surface circle
 
-  
+  if(0.eq.1)then
   call cales_circle_free( nx,nz,rho,lam,mu,dt,dx,dz, &
        e1, e2, e3, e4, e5, e6, e7, e8, &
        e13,e14,e15,e16,e17,e18,e19,e20, &
        f1, f2, f3, f4, f5, f6, f7, f8, &
        f13,f14,f15,f16,f17,f18,f19,f20 )
+  endif
 
   ! discontinuities
   
@@ -189,7 +191,7 @@ subroutine forwardmodelling
 
         ! NF uses cales_circle_free but normally you should use calstep_discon or calstep
  
-           call calstep_circle_free( nx,nz, &
+           call calstep_discon( nx,nz, &
                 e1, e2, e3, e4, e5, e6, e7, e8, &
                 e13,e14,e15,e16,e17,e18,e19,e20, &
                 f1, f2, f3, f4, f5, f6, f7, f8, &

@@ -1,4 +1,4 @@
-MarmousiOPT
+MarmousiVrai
 ../models/marmousi_vp
 ../models/marmousi_vs
 ../models/marmousi_rho
@@ -14,7 +14,7 @@ T writingStrain
 1.d-3 2.5d-2 2.5d-2 dt,dx,dz
 6.5d0 5.d-2 f0, t0
 0 0 i1Source, i2Source
-/Users/fujinobuaki/Github/OptimallyAccurate2D/MarmousiVrai
+/Users/fujinobuaki/git/OptimallyAccurate2D/MarmousiVrai
 OBS_UX
 OBS_UZ
 0

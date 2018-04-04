@@ -87,7 +87,11 @@ program multipleSourcesFWI2D
 
   do while (iterationIndex<numberIteration) 
 
-
+     iterationIndex=iterationIndex+1
+     
+     print *, "iterationIndex = ", iterationIndex
+     
+     call backpropagation
 
      ! FFT and deconvolution with Ricker wavelet
      ! It allocates also Frechet derivatives
@@ -102,8 +106,9 @@ program multipleSourcesFWI2D
 
      kernelP=0.d0
      kernelS=0.d0
- 
      
+     nx=boxnx
+     nz=boxnz
 
      !call approximatedHessian
      
@@ -115,9 +120,11 @@ program multipleSourcesFWI2D
      ! NF should use CG inversion scheme from old libraries
      
 
-     call invbyCG
+     !call invbyCG
      
      
+     call gradientCalculation 
+
      recl_size=kind(1.e0)*(boxnx+1)*(boxnz+1)
      
      
@@ -137,13 +144,18 @@ program multipleSourcesFWI2D
 
      
 
-     
 
-     if(0.eq.1) then ! we do not use steplengths for the moment
-        vp(1:nx+1,1:nz+1) = vp(1:nx+1,1:nz+1) + steplengthVp * kernelP(1:nx+1,1:nz+1)
-        vs(1:nx+1,1:nz+1) = vs(1:nx+1,1:nz+1) + steplengthVs * kernelS(1:nx+1,1:nz+1)
+     if(1.eq.1) then ! we just change kernelP from iz=10 for the singularity problem
+
+        do iz=1,9
+           vp(1:nx+1,iz) = vp(1:nx+1,iz) + steplengthVp * kernelP(1:nx+1,iz) * dexp(dble(-11+iz)*0.53)
+           vs(1:nx+1,iz) = vp(1:nx+1,iz) + steplengthVs * kernelS(1:nx+1,iz) * dexp(dble(-11+iz)*0.53)
+        enddo
+
+        vp(1:nx+1,10:nz+1) = vp(1:nx+1,10:nz+1) + steplengthVp * kernelP(1:nx+1,10:nz+1)
+        vs(1:nx+1,10:nz+1) = vs(1:nx+1,10:nz+1) + steplengthVs * kernelS(1:nx+1,10:nz+1)
         call calstruct2(maxnx,maxnz,nx,nz,rho,vp,vs,lam,mu,liquidmarkers)
-        call calstructBC(maxnx, maxnz,nx,nz,rho,lam,mu,markers,liquidmarkers,zerodisplacement,lmargin,rmargin)
+        call calstructBC(maxnx,maxnz,nx,nz,rho,lam,mu,markers,liquidmarkers,zerodisplacement,lmargin,rmargin)
         print *, "small perturbation"
         
 
@@ -181,12 +193,12 @@ program multipleSourcesFWI2D
 
 
      
-     vp(1:boxnx+1,1:boxnz+1) = vp(1:boxnx+1,1:boxnz+1) + kernelP(1:boxnx+1,1:boxnz+1)
-     vs(1:boxnx+1,1:boxnz+1) = vs(1:boxnx+1,1:boxnz+1) + kernelS(1:boxnx+1,1:boxnz+1)
+     vp(1:boxnx+1,1:boxnz+1) = vp(1:boxnx+1,1:boxnz+1) + 1.d3*(alphaVp-steplengthVp)*kernelP(1:boxnx+1,1:boxnz+1)
+     vs(1:boxnx+1,1:boxnz+1) = vs(1:boxnx+1,1:boxnz+1) + 1.d3*(alphaVs-steplengthVs)*kernelS(1:boxnx+1,1:boxnz+1)
 
 
 
-     singleStrainForward(:,:)=vp(1:boxnx+1,1:boxnz+1)
+     singleStrainForward(:,:)=vp(1:boxnx+1,1:boxnz+1)*1.e3
      
      write(outfile,'("./iteratedModels/",I3.3,".vpmodel")'),iterationIndex
      open(1,file=outfile,form='unformatted',access='direct',recl=recl_size)
@@ -194,7 +206,7 @@ program multipleSourcesFWI2D
      close(1)
 
  
-     singleStrainForward(:,:)=vs(1:boxnx+1,1:boxnz+1)
+     singleStrainForward(:,:)=vs(1:boxnx+1,1:boxnz+1)*1.e3
 
      write(outfile,'("./iteratedModels/",I3.3,".vsmodel")'),iterationIndex
      open(1,file=outfile,form='unformatted',access='direct',recl=recl_size)
@@ -202,8 +214,35 @@ program multipleSourcesFWI2D
      close(1)
 
 
-     nx=boxnx
-     nz=boxnz
+     ! rho model construction from Vp model
+
+     vs = 0.d0
+
+     call vp2rho(boxnx+1,boxnz+1,vp,vs)
+
+     
+     singleStrainForward(:,:)=vs(1:boxnx+1,1:boxnz+1)
+
+     write(outfile,'("./iteratedModels/",I3.3,".rhomodel")'),iterationIndex
+     open(1,file=outfile,form='unformatted',access='direct',recl=recl_size)
+     write(1,rec=1) singleStrainForward
+     close(1)
+     
+     
+     write(vpfile,'("./iteratedModels/",I3.3,".vpmodel")'),iterationIndex
+     write(vsfile,'("./iteratedModels/",I3.3,".vsmodel")'),iterationIndex
+     write(rhofile,'("./iteratedModels/",I3.3,".rhomodel")'),iterationIndex
+
+
+     print *, "this is line 232 maxnx,maxnz,nx,nz=",maxnx,maxnz,nx,nz
+
+     call calstruct( maxnx,maxnz,rhofile,nx,nz,rho )
+     call calstruct( maxnx,maxnz,vpfile, nx,nz,vp )
+     call calstruct( maxnx,maxnz,vsfile, nx,nz,vs )
+     
+     call freeConfig
+
+
      call calstruct2(maxnx,maxnz,nx,nz,rho,vp,vs,lam,mu,liquidmarkers)
      call calstructBC(maxnx, maxnz,nx,nz,rho,lam,mu,markers,liquidmarkers,zerodisplacement,lmargin,rmargin)
      call forwardmodelling

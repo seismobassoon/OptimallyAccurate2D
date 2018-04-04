@@ -593,3 +593,38 @@ end subroutine compNRBCpre
 
 
 
+subroutine vp2rho(nx,nz,fullvp,fullrho)
+
+  implicit none
+  
+  integer :: nx,nz,i,j
+  real(kind(0d0)) :: fullvp (nx+1,nz+1), fullrho(nx+1,nz+1)
+  real(kind(0d0)) :: vpwater = 1500.d0
+  real(kind(0d0)) :: dval,pval,xover1,xover2,grad,const
+
+  fullvp(:,:)=1.d3*fullvp(:,:)
+  do j=1,nz+1
+     do i=1,Nx+1
+        pval = fullvp(i,j)
+        if (pval.le.vpwater) then
+           dval = 1000.d0
+        elseif (pval > vpwater .and. pval < 2000.d0) then
+           dval = 2351.d0-(7497.d0)*(pval/1000.d0)**(-4.656d0)
+        elseif (pval >= 2000.d0 .and. pval <= 2150.d0) then
+           xover1 = 2351.d0-(7497.d0)*(2000.d0/1000.d0)**(-4.656d0)
+           xover2 = 1740.d0*(2150.d0/1000.d0)**(0.25d0)
+           grad = 150.d0/(xover2-xover1)
+           const = 2000.d0-(xover1*grad)
+           dval = (pval-const)/grad
+        elseif (pval > 2150.d0) then
+           dval = 1740.d0*(pval/1000.d0)**(0.25d0)
+        endif
+        fullrho(i,j) = dval
+     enddo
+  enddo
+
+  fullrho(:,:)=1.d-3*fullrho(:,:)
+  fullvp(:,:)=1.d-3*fullvp(:,:)
+end subroutine vp2rho
+
+  
