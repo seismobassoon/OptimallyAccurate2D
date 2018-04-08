@@ -68,6 +68,7 @@ subroutine vectorAllocateFWI
   implicit none
   allocate(obsx(0:maxnt,1:nReceiver),obsz(0:maxnt,1:nReceiver)) ! observed
   allocate(delx(0:maxnt,1:nReceiver),delz(0:maxnt,1:nReceiver)) ! difference
+  allocate(synx2(0:maxnt,1:nReceiver),synz2(0:maxnt,1:nReceiver)) ! backup synthetics 
   allocate(singleStrainForward(1:nx+1,1:nz+1))
   allocate(singleStrainBack(1:nx+1,1:nz+1))
   allocate(strainForward(1:nx+1,1:nz+1))
@@ -140,13 +141,22 @@ subroutine calStrainDiagonal(nx,nz,ux,uz,lmargin,rmargin,singleStrainDiagonal)
   ! and we suppose that we have lmargin != 0 and rmargin != 0
   ! i.e., we use the four-point first derivative operators with one extra point to the left
 
+
   nxstart=lmargin(1)+1
   nxend=nx+1-rmargin(1)
 
   nzstart=lmargin(2)+1
   nzend=nz+1-rmargin(2)
 
-  
+  if(lmargin(1).eq.0) then
+      nxstart=nxstart+2
+      nxend=nxend-2
+      nzstart=nzstart+2
+      nzend=nzend-2
+  endif         
+
+
+
   do ix=nxstart,nxend
      do iz=nzstart,nzend
         straintmp=0.d0
@@ -182,7 +192,16 @@ subroutine calStrainShear(nx,nz,ux,uz,lmargin,rmargin,singleStrain)
   nzstart=lmargin(2)+1
   nzend=nz+1-rmargin(2)
 
-  
+ 
+  if(lmargin(1).eq.0) then
+       nxstart=nxstart+2
+       nxend=nxend-2
+       nzstart=nzstart+2
+       nzend=nzend-2
+  endif    
+
+
+
   do ix=nxstart,nxend
      do iz=nzstart,nzend
         straintmp=0.d0

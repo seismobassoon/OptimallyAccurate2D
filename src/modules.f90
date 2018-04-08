@@ -87,7 +87,7 @@ module parameters
   logical, parameter :: USE_PML_YMIN = .true.
   logical, parameter :: USE_PML_YMAX = .true.
   ! thickness of the PML layer in grid points
-  integer, parameter :: NPOINTS_PML = 50*times
+  integer, parameter :: NPOINTS_PML = 0*times
   double precision, parameter :: CerjanRate = 0.0015
   double precision, allocatable, dimension(:,:) :: weightBC
   ! Cerjan boundary condition
@@ -180,6 +180,7 @@ module paramFWI
   double precision :: alphaVp, alphaVs ! these are real steplengths
   real(kind(0e0)), allocatable, dimension(:,:) :: obsx,obsz
   real(kind(0e0)), allocatable, dimension(:,:) :: delx,delz
+  real(kind(0e0)), allocatable, dimension(:,:) :: synx2,synz2
   double precision, parameter :: alphaAIC = 10.d0
 
   ! for FourierAll

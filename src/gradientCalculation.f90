@@ -58,7 +58,6 @@ subroutine gradientCalculation
            it2 = -it1+it
            
            
-           
            if(it2.gt.nt) cycle
            if(it2.lt.0) cycle
            

@@ -200,6 +200,10 @@ subroutine backpropagation
      delx(:,:)=obsx(:,:)-synx(:,:)
      delz(:,:)=obsz(:,:)-synz(:,:)
 
+     ! reverse delx,delz
+
+     delx(0:maxnt,:)=delx(maxnt:0:-1,:)
+     delz(0:maxnt,:)=delz(maxnt:0:-1,:)
 
      do ir=1,nReceiver
         normaliseX(ir)=maxval(abs(delx(0:maxnt/2,ir)))

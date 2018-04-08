@@ -6,16 +6,16 @@ F optimise or conventional
 F video or not
 T writingStrain
 1 IT_DISPLAY
-50 50 5  iSourceStart, iSourceInverval, nSource
+10 10 29  iSourceStart, iSourceInverval, nSource 
 1 izSourceStart
-50 50 5 iReceiverStart, iReceiverInterval, nReceiver
+10 10 29 iReceiverStart, iReceiverInterval, nReceiver
 1 izReceiverStart
 3900 299 99 nt nx nz
 1.d-3 2.5d-2 2.5d-2 dt,dx,dz
 6.5d0 5.d-2 f0, t0
 0 0 i1Source, i2Source
-/Users/fujinobuaki/Github/OptimallyAccurate2D/MarmousiVrai/synthetics/MarmousiOPT/
+../MarmousiVrai/synthetics/MarmousiVrai/
 OPT_UX
 OPT_UZ
 10
-1.0 1.0
+30.0 30.0

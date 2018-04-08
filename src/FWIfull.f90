@@ -159,6 +159,10 @@ program multipleSourcesFWI2D
         print *, "small perturbation"
         
 
+        synx2(:,:)=synx(:,:)
+        synz2(:,:)=synz(:,:)
+
+
         synx=0.e0
         synz=0.e0
 
@@ -168,20 +172,25 @@ program multipleSourcesFWI2D
         denominatorG = 0.d0
         
         
-     
         
-        synx(:,:) = obsx(:,:)-synx(:,:)
-        synz(:,:) = obsz(:,:)-synz(:,:)
         
+        synx(:,:) = synx(:,:)-synx2(:,:)
+        synz(:,:) = synz(:,:)-synz2(:,:)
+        
+
+        delx(0:maxnt,:)=delx(maxnt:0:-1,:)
+        delz(0:maxnt,:)=delz(maxnt:0:-1,:)
+
+
         ! here, syn is no more syn !!!
 
         numeratorG = sum(synx(:,:)*delx(:,:))+sum(synz(:,:)*delz(:,:))
         denominatorG = sum(synx(:,:)*synx(:,:))+sum(synz(:,:)*synz(:,:))
 
-        print *, "num, dem", numeratorG, denominatorG
+        print *, "num, dem", -numeratorG, denominatorG
 
-        alphaVp = numeratorG/denominatorG*steplengthVp
-        alphaVs = numeratorG/denominatorG*steplengthVs
+        alphaVp = -numeratorG/denominatorG*steplengthVp
+        alphaVs = -numeratorG/denominatorG*steplengthVs
      
         print *, "alphaVp/Vs = ",  alphaVp,alphaVs
      
@@ -193,8 +202,8 @@ program multipleSourcesFWI2D
 
 
      
-     vp(1:boxnx+1,1:boxnz+1) = vp(1:boxnx+1,1:boxnz+1) + 1.d3*(alphaVp-steplengthVp)*kernelP(1:boxnx+1,1:boxnz+1)
-     vs(1:boxnx+1,1:boxnz+1) = vs(1:boxnx+1,1:boxnz+1) + 1.d3*(alphaVs-steplengthVs)*kernelS(1:boxnx+1,1:boxnz+1)
+     vp(1:boxnx+1,1:boxnz+1) = vp(1:boxnx+1,1:boxnz+1) + (alphaVp-steplengthVp)*kernelP(1:boxnx+1,1:boxnz+1)
+     vs(1:boxnx+1,1:boxnz+1) = vs(1:boxnx+1,1:boxnz+1) + (alphaVs-steplengthVs)*kernelS(1:boxnx+1,1:boxnz+1)
 
 
 
@@ -221,7 +230,7 @@ program multipleSourcesFWI2D
      call vp2rho(boxnx+1,boxnz+1,vp,vs)
 
      
-     singleStrainForward(:,:)=vs(1:boxnx+1,1:boxnz+1)
+     singleStrainForward(:,:)=vs(1:boxnx+1,1:boxnz+1)*1.e3
 
      write(outfile,'("./iteratedModels/",I3.3,".rhomodel")'),iterationIndex
      open(1,file=outfile,form='unformatted',access='direct',recl=recl_size)
@@ -234,8 +243,13 @@ program multipleSourcesFWI2D
      write(rhofile,'("./iteratedModels/",I3.3,".rhomodel")'),iterationIndex
 
 
+     maxnx=nx+lmargin(1)+rmargin(1)
+     maxnz=nz+lmargin(2)+rmargin(2)
+
      print *, "this is line 232 maxnx,maxnz,nx,nz=",maxnx,maxnz,nx,nz
 
+
+     
      call calstruct( maxnx,maxnz,rhofile,nx,nz,rho )
      call calstruct( maxnx,maxnz,vpfile, nx,nz,vp )
      call calstruct( maxnx,maxnz,vsfile, nx,nz,vs )
@@ -244,7 +258,7 @@ program multipleSourcesFWI2D
 
 
      call calstruct2(maxnx,maxnz,nx,nz,rho,vp,vs,lam,mu,liquidmarkers)
-     call calstructBC(maxnx, maxnz,nx,nz,rho,lam,mu,markers,liquidmarkers,zerodisplacement,lmargin,rmargin)
+     call calstructBC(maxnx,maxnz,nx,nz,rho,lam,mu,markers,liquidmarkers,zerodisplacement,lmargin,rmargin)
      call forwardmodelling
      
      iterationIndex=iterationIndex+1
