@@ -87,7 +87,7 @@ module parameters
   logical, parameter :: USE_PML_YMIN = .true.
   logical, parameter :: USE_PML_YMAX = .true.
   ! thickness of the PML layer in grid points
-  integer, parameter :: NPOINTS_PML = 0*times
+  integer, parameter :: NPOINTS_PML = 50*times
   double precision, parameter :: CerjanRate = 0.0015
   double precision, allocatable, dimension(:,:) :: weightBC
   ! Cerjan boundary condition
