@@ -65,11 +65,10 @@ program multipleSourcesFWI2D
     
   iterationIndex=0
 
-  ! force to write strains
+  ! forced to write strains
 
   writingStrain = .true.
 
-  ! NF should uncomment below
 
   call forwardmodelling
 
@@ -83,7 +82,7 @@ program multipleSourcesFWI2D
   
   boxnx=nx-rmargin(1)-lmargin(1)
   boxnz=nz-rmargin(2)-lmargin(2)
-  call FourierAllocate
+  !call FourierAllocate
 
   do while (iterationIndex<numberIteration) 
 
