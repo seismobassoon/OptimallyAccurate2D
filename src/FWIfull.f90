@@ -146,10 +146,11 @@ program multipleSourcesFWI2D
 
      if(1.eq.1) then ! we just change kernelP from iz=10 for the singularity problem
 
-        do iz=1,9
-           vp(1:nx+1,iz) = vp(1:nx+1,iz) + steplengthVp * kernelP(1:nx+1,iz) * dexp(dble(-11+iz)*0.53)
-           vs(1:nx+1,iz) = vp(1:nx+1,iz) + steplengthVs * kernelS(1:nx+1,iz) * dexp(dble(-11+iz)*0.53)
-        enddo
+        !do iz=1,9
+        !   vp(1:nx+1,iz) = vp(1:nx+1,iz) + steplengthVp * kernelP(1:nx+1,iz) * dexp(dble(-11+iz)*0.53)
+        !   vs(1:nx+1,iz) = vp(1:nx+1,iz) + steplengthVs * kernelS(1:nx+1,iz) * dexp(dble(-11+iz)*0.53)
+        !enddo
+
 
         vp(1:nx+1,10:nz+1) = vp(1:nx+1,10:nz+1) + steplengthVp * kernelP(1:nx+1,10:nz+1)
         vs(1:nx+1,10:nz+1) = vs(1:nx+1,10:nz+1) + steplengthVs * kernelS(1:nx+1,10:nz+1)
@@ -201,8 +202,8 @@ program multipleSourcesFWI2D
 
 
      
-     vp(1:boxnx+1,1:boxnz+1) = vp(1:boxnx+1,1:boxnz+1) + (alphaVp-steplengthVp)*kernelP(1:boxnx+1,1:boxnz+1)
-     vs(1:boxnx+1,1:boxnz+1) = vs(1:boxnx+1,1:boxnz+1) + (alphaVs-steplengthVs)*kernelS(1:boxnx+1,1:boxnz+1)
+     vp(1:boxnx+1,10:boxnz+1) = vp(1:boxnx+1,10:boxnz+1) + (alphaVp-steplengthVp)*kernelP(1:boxnx+1,10:boxnz+1)
+     vs(1:boxnx+1,10:boxnz+1) = vs(1:boxnx+1,10:boxnz+1) + (alphaVs-steplengthVs)*kernelS(1:boxnx+1,10:boxnz+1)
 
 
 
@@ -226,7 +227,7 @@ program multipleSourcesFWI2D
 
      vs = 0.d0
 
-     call vp2rho(boxnx+1,boxnz+1,vp,vs)
+     call vp2rho(boxnx+1,boxnz+1,vp(1:boxnx+1,1:boxnz+1),vs(1:boxnx+1,1:boxnz+1))
 
      
      singleStrainForward(:,:)=vs(1:boxnx+1,1:boxnz+1)*1.e3
@@ -242,10 +243,12 @@ program multipleSourcesFWI2D
      write(rhofile,'("./iteratedModels/",I3.3,".rhomodel")'),iterationIndex
 
 
+     nx=boxnx
+     nz=boxnz
      maxnx=nx+lmargin(1)+rmargin(1)
      maxnz=nz+lmargin(2)+rmargin(2)
 
-     print *, "this is line 232 maxnx,maxnz,nx,nz=",maxnx,maxnz,nx,nz
+     print *, "this is line 251 maxnx,maxnz,nx,nz=",maxnx,maxnz,nx,nz
 
 
      
@@ -264,7 +267,7 @@ program multipleSourcesFWI2D
 
   enddo
 
-  call FourierDeallocate
+  !call FourierDeallocate
 
      
      

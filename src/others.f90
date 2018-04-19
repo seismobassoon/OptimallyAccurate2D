@@ -604,7 +604,7 @@ subroutine vp2rho(nx,nz,fullvp,fullrho)
 
   fullvp(:,:)=1.d3*fullvp(:,:)
   do j=1,nz+1
-     do i=1,Nx+1
+     do i=1,nx+1
         pval = fullvp(i,j)
         if (pval.le.vpwater) then
            dval = 1000.d0
