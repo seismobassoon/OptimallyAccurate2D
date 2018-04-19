@@ -207,7 +207,7 @@ program multipleSourcesFWI2D
 
 
 
-     singleStrainForward(:,:)=vp(1:boxnx+1,1:boxnz+1)*1.e3
+     singleStrainForward(:,:)=vp(1:boxnx+1,1:boxnz+1)*1.d3
      
      write(outfile,'("./iteratedModels/",I3.3,".vpmodel")'),iterationIndex
      open(1,file=outfile,form='unformatted',access='direct',recl=recl_size)
@@ -215,7 +215,7 @@ program multipleSourcesFWI2D
      close(1)
 
  
-     singleStrainForward(:,:)=vs(1:boxnx+1,1:boxnz+1)*1.e3
+     singleStrainForward(:,:)=vs(1:boxnx+1,1:boxnz+1)*1.d3
 
      write(outfile,'("./iteratedModels/",I3.3,".vsmodel")'),iterationIndex
      open(1,file=outfile,form='unformatted',access='direct',recl=recl_size)
@@ -230,11 +230,11 @@ program multipleSourcesFWI2D
      call vp2rho(boxnx+1,boxnz+1,vp(1:boxnx+1,1:boxnz+1),vs(1:boxnx+1,1:boxnz+1))
 
      
-     singleStrainForward(:,:)=vs(1:boxnx+1,1:boxnz+1)*1.e3
+     singleStrainForward(:,:)=vs(1:boxnx+1,1:boxnz+1)*1.d3
 
      write(outfile,'("./iteratedModels/",I3.3,".rhomodel")'),iterationIndex
      open(1,file=outfile,form='unformatted',access='direct',recl=recl_size)
-     write(1,rec=1) singleStrainForward
+     write(1,rec=1) singleStrainForward(1:boxnx+1,1:boxnz+1)
      close(1)
      
      

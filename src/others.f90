@@ -598,9 +598,10 @@ subroutine vp2rho(nx,nz,fullvp,fullrho)
   implicit none
   
   integer :: nx,nz,i,j
-  real(kind(0d0)) :: fullvp (nx+1,nz+1), fullrho(nx+1,nz+1)
+  real(kind(0d0)) :: fullvp(nx+1,nz+1),fullrho(nx+1,nz+1) 
   real(kind(0d0)) :: vpwater = 1500.d0
   real(kind(0d0)) :: dval,pval,xover1,xover2,grad,const
+
 
   fullvp(:,:)=1.d3*fullvp(:,:)
   do j=1,nz+1
@@ -623,8 +624,8 @@ subroutine vp2rho(nx,nz,fullvp,fullrho)
      enddo
   enddo
 
-  fullrho(:,:)=1.d-3*fullrho(:,:)
   fullvp(:,:)=1.d-3*fullvp(:,:)
+  fullrho(:,:)=1.d-3*fullrho(:,:)
 end subroutine vp2rho
 
   
