@@ -152,8 +152,8 @@ program multipleSourcesFWI2D
         !enddo
 
 
-        vp(1:nx+1,10:nz+1) = vp(1:nx+1,10:nz+1) + steplengthVp * kernelP(1:nx+1,10:nz+1)
-        vs(1:nx+1,10:nz+1) = vs(1:nx+1,10:nz+1) + steplengthVs * kernelS(1:nx+1,10:nz+1)
+        vp(1:nx+1,10:nz+1) = vp(1:nx+1,10:nz+1) + steplengthVp * 1.d6 * kernelP(1:nx+1,10:nz+1) 
+        vs(1:nx+1,10:nz+1) = vs(1:nx+1,10:nz+1) + steplengthVs * 1.d6 * kernelS(1:nx+1,10:nz+1)
         call calstruct2(maxnx,maxnz,nx,nz,rho,vp,vs,lam,mu,liquidmarkers)
         call calstructBC(maxnx,maxnz,nx,nz,rho,lam,mu,markers,liquidmarkers,zerodisplacement,lmargin,rmargin)
         print *, "small perturbation"
@@ -189,8 +189,8 @@ program multipleSourcesFWI2D
 
         print *, "num, dem", -numeratorG, denominatorG
 
-        alphaVp = -numeratorG/denominatorG*steplengthVp
-        alphaVs = -numeratorG/denominatorG*steplengthVs
+        alphaVp = -numeratorG/denominatorG*steplengthVp * 1.d6
+        alphaVs = -numeratorG/denominatorG*steplengthVs * 1.d6
      
         print *, "alphaVp/Vs = ",  alphaVp,alphaVs
      
@@ -202,8 +202,8 @@ program multipleSourcesFWI2D
 
 
      
-     vp(1:boxnx+1,10:boxnz+1) = vp(1:boxnx+1,10:boxnz+1) + (alphaVp-steplengthVp)*kernelP(1:boxnx+1,10:boxnz+1)
-     vs(1:boxnx+1,10:boxnz+1) = vs(1:boxnx+1,10:boxnz+1) + (alphaVs-steplengthVs)*kernelS(1:boxnx+1,10:boxnz+1)
+     vp(1:boxnx+1,10:boxnz+1) = vp(1:boxnx+1,10:boxnz+1) + 1.d6 * (alphaVp-steplengthVp)*kernelP(1:boxnx+1,10:boxnz+1)
+     vs(1:boxnx+1,10:boxnz+1) = vs(1:boxnx+1,10:boxnz+1) + 1.d6 * (alphaVs-steplengthVs)*kernelS(1:boxnx+1,10:boxnz+1)
 
 
 
