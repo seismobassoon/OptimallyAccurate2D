@@ -86,7 +86,7 @@ program multipleSourcesFWI2D
 
   do while (iterationIndex<numberIteration) 
 
-     iterationIndex=iterationIndex+1
+     !iterationIndex=iterationIndex+1
      
      print *, "iterationIndex = ", iterationIndex
      

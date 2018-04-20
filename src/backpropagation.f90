@@ -153,20 +153,40 @@ subroutine backpropagation
 
      ! Reading SYN data
 
-  
-     if(optimise) then
-        write(outfile,'(I5,".",I5,".OPT_UX") ')  &
-             isx-lmargin(1),isz-lmargin(2)
+
+
+     if(iterationIndex.eq.0) then
+        if(optimise) then
+           write(outfile,'(I5,".",I5,".OPT_UX") ')  &
+                isx-lmargin(1),isz-lmargin(2)
+        else
+           write(outfile,'(I5,".",I5,".CON_UX") ') &
+                isx-lmargin(1),isz-lmargin(2)
+        endif
+        
+        do j=1,12
+           if(outfile(j:j).eq.' ') outfile(j:j)='0'
+        enddo
+        
+        outfile = './synthetics/'//trim(modelname)//'/'//outfile
      else
-        write(outfile,'(I5,".",I5,".CON_UX") ') &
-             isx-lmargin(1),isz-lmargin(2)
+        if(optimise) then
+           write(outfile,'(I5,".",I5,".OPT_UX.it",I3.3) ')  &
+                isx-lmargin(1),isz-lmargin(2),iterationIndex
+        else
+           write(outfile,'(I5,".",I5,".CON_UX,it",I3.3) ') &
+                isx-lmargin(1),isz-lmargin(2),iterationIndex
+        endif
+        
+        do j=1,12
+           if(outfile(j:j).eq.' ') outfile(j:j)='0'
+        enddo
+        
+        outfile = './synthetics/'//trim(modelname)//'/'//outfile
+        
      endif
-     
-     do j=1,12
-        if(outfile(j:j).eq.' ') outfile(j:j)='0'
-     enddo
-     
-     outfile = './synthetics/'//trim(modelname)//'/'//outfile
+
+
      
      open(1,file=outfile,form='unformatted',access='direct',recl=recl_size_syn)
      read(1,rec=1) synx(0:maxnt,1:nReceiver)
@@ -174,21 +194,41 @@ subroutine backpropagation
 
      
      
-     if(optimise) then
-        write(outfile,'(I5,".",I5,".OPT_UZ") ') &
-             isx-lmargin(1),isz-lmargin(2)
-     else
-        write(outfile,'(I5,".",I5,".CON_UZ") ') &
-             isx-lmargin(1),isz-lmargin(2)
-     endif
-     
-     do j=1,12
-        if(outfile(j:j).eq.' ') outfile(j:j)='0'
-     enddo
-     
-     outfile = './synthetics/'//trim(modelname)//'/'//outfile
    
-     
+     if(iterationIndex.eq.0) then
+        
+        if(optimise) then
+           write(outfile,'(I5,".",I5,".OPT_UZ") ') &
+                isx-lmargin(1),isz-lmargin(2)
+        else
+           write(outfile,'(I5,".",I5,".CON_UZ") ') &
+                isx-lmargin(1),isz-lmargin(2)
+        endif
+        
+        do j=1,12
+           if(outfile(j:j).eq.' ') outfile(j:j)='0'
+        enddo
+        
+        outfile = './synthetics/'//trim(modelname)//'/'//outfile
+        
+     else
+
+          
+        if(optimise) then
+           write(outfile,'(I5,".",I5,".OPT_UZ.it",I3.3) ') &
+                isx-lmargin(1),isz-lmargin(2),iterationIndex
+        else
+           write(outfile,'(I5,".",I5,".CON_UZ.it",I3.3) ') &
+                isx-lmargin(1),isz-lmargin(2),iterationIndex
+        endif
+        
+        do j=1,12
+           if(outfile(j:j).eq.' ') outfile(j:j)='0'
+        enddo
+        
+        outfile = './synthetics/'//trim(modelname)//'/'//outfile
+     endif
+
      open(1,file=outfile,form='unformatted',access='direct',recl=recl_size_syn)
      read(1,rec=1) synz(0:maxnt,1:nReceiver)
      close(1)
