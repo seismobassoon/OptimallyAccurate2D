@@ -178,8 +178,8 @@ program multipleSourcesFWI2D
         synz(:,:) = synz(:,:)-synz2(:,:)
         
 
-        delx(0:maxnt,:)=delx(maxnt:0:-1,:)
-        delz(0:maxnt,:)=delz(maxnt:0:-1,:)
+        !delx(0:maxnt,:)=delx(maxnt:0:-1,:)
+        !delz(0:maxnt,:)=delz(maxnt:0:-1,:)
 
 
         ! here, syn is no more syn !!!
