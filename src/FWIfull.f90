@@ -165,7 +165,7 @@ program multipleSourcesFWI2D
 
         synx=0.e0
         synz=0.e0
-
+        writingStrain = .false.
         call forwardmodelling
         
         numeratorG = 0.d0
@@ -261,10 +261,11 @@ program multipleSourcesFWI2D
 
      call calstruct2(maxnx,maxnz,nx,nz,rho,vp,vs,lam,mu,liquidmarkers)
      call calstructBC(maxnx,maxnz,nx,nz,rho,lam,mu,markers,liquidmarkers,zerodisplacement,lmargin,rmargin)
-     call forwardmodelling
+
      
      iterationIndex=iterationIndex+1
-
+     writingStrain = .true.
+     call forwardmodelling
   enddo
 
   !call FourierDeallocate
