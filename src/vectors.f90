@@ -59,6 +59,9 @@ subroutine vectorAllocate
   allocate(singleStrainShear(maxnx+1,maxnz+1))
   allocate(tmpsingleStrain(1:nx+1,1:nz+1))
   
+  allocate(singleStrain(4,maxnx+1,maxnz+1)) ! xx, zz, xz, zx
+  allocate(tmpsingleStrain4comp(4,1:nx+1,1:nz+1))
+
 end subroutine vectorAllocate
 
 
@@ -172,12 +175,12 @@ end subroutine calStrainDiagonal
 
 
 
-subroutine calStrainShear(nx,nz,ux,uz,lmargin,rmargin,singleStrain)
+subroutine calStrainShear(nx,nz,ux,uz,lmargin,rmargin,singleStrainShear)
   implicit none
   integer :: maxnz,nx,nz,ix,iz
   double precision :: ux(1:nx+1,1:nz+1),uz(1:nx+1,1:nz+1)
   integer :: lmargin(1:2), rmargin(1:2)
-  real(kind(0e0)) :: singleStrain(1:nx+1,1:nz+1)
+  real(kind(0e0)) :: singleStrainShear(1:nx+1,1:nz+1)
   double precision :: straintmp
   double precision, parameter :: onetwelfth = 0.0833333333333333d0
   
@@ -207,9 +210,105 @@ subroutine calStrainShear(nx,nz,ux,uz,lmargin,rmargin,singleStrain)
         straintmp=0.d0
         straintmp=(5.d0*uz(ix+1,iz)+3.d0*uz(ix,iz)-9.d0*uz(ix-1,iz)+uz(ix-2,iz))*onetwelfth
         straintmp=straintmp+(5.d0*ux(ix,iz+1)+3.d0*ux(ix,iz)-9.d0*ux(ix,iz-1)+ux(ix,iz-2))*onetwelfth
-        singleStrain(ix,iz)=straintmp
+        singleStrainShear(ix,iz)=straintmp
      enddo
   enddo
  
      
 end subroutine calStrainShear
+
+
+
+
+subroutine calStrain(nx,nz,ux,uz,lmargin,rmargin,singleStrainDiagonal,singleStrainShear,singleStrain)
+  implicit none
+  integer :: maxnz,nx,nz,ix,iz
+  double precision :: ux(1:nx+1,1:nz+1),uz(1:nx+1,1:nz+1)
+  integer :: lmargin(1:2), rmargin(1:2)
+  real(kind(0e0)) :: singleStrainDiagonal(1:nx+1,1:nz+1)
+  real(kind(0e0)) :: singleStrainShear(1:nx+1,1:nz+1)
+  real(kind(0e0)) :: singleStrain(4,1:nx+1,1:nz+1)
+  double precision :: straintmp
+  double precision :: straintmpOneComponent
+  double precision, parameter :: onetwelfth = 0.0833333333333333d0
+  
+  integer :: nxstart,nxend,nzstart,nzend
+  ! we calculate only for the box of interest (without absorbing boundaries)
+  ! and we suppose that we have lmargin != 0 and rmargin != 0
+  ! i.e., we use the four-point first derivative operators with one extra point to the left
+
+
+  nxstart=lmargin(1)+1
+  nxend=nx+1-rmargin(1)
+
+  nzstart=lmargin(2)+1
+  nzend=nz+1-rmargin(2)
+
+  if(lmargin(1).eq.0) then
+      nxstart=nxstart+2
+      nxend=nxend-2
+      nzstart=nzstart+2
+      nzend=nzend-2
+  endif         
+
+
+
+  do ix=nxstart,nxend
+     do iz=nzstart,nzend
+        straintmp=0.d0
+        straintmpOneComponent=0.d0
+
+        ! u_{x,x}
+
+        straintmpOneComponent=(5.d0*ux(ix+1,iz)+3.d0*ux(ix,iz)-9.d0*ux(ix-1,iz)+ux(ix-2,iz))*onetwelfth
+        singleStrain(1,ix,iz)=straintmpOneComponent
+
+        straintmp=straintmpOneComponent
+
+        ! u_{z,z}
+
+        straintmpOneComponent=0.d0
+        straintmpOneComponent=(5.d0*uz(ix,iz+1)+3.d0*uz(ix,iz)-9.d0*uz(ix,iz-1)+uz(ix,iz-2))*onetwelfth
+        singleStrain(2,ix,iz)=straintmpOneComponent
+
+        ! u_{x,x} + u_{z,z}
+
+        straintmp=straintmp+straintmpOneComponent
+        singleStrainDiagonal(ix,iz)=straintmp
+
+     enddo
+  enddo
+
+  do ix=nxstart,nxend
+     do iz=nzstart,nzend
+        straintmp=0.d0
+        straintmpOneComponent=0.d0
+       
+        
+        ! u_{x,z}
+
+        straintmpOneComponent=(5.d0*ux(ix,iz+1)+3.d0*ux(ix,iz)-9.d0*ux(ix,iz-1)+ux(ix,iz-2))*onetwelfth
+        singleStrain(3,ix,iz)=straintmpOneComponent
+
+        straintmp=straintmpOneComponent
+
+        ! u_{z,x}
+        
+        straintmpOneComponent=0.d0
+        straintmpOneComponent=(5.d0*uz(ix+1,iz)+3.d0*uz(ix,iz)-9.d0*uz(ix-1,iz)+uz(ix-2,iz))*onetwelfth
+        singleStrain(4,ix,iz)=straintmpOneComponent
+
+        ! u_{x,z} + u_{z,x}
+
+        straintmp=straintmp+straintmpOneComponent
+        singleStrainShear(ix,iz)=straintmp
+
+
+     enddo
+  enddo
+
+
+ 
+     
+end subroutine calStrain
+

@@ -250,9 +250,32 @@ subroutine forwardmodelling
         
         if(writingStrain.and.(mod(it,IT_DISPLAY).eq.0)) then
            singleStrainDiagonal=0.e0
+           singleStrainShear=0.e0
            tmpsingleStrain=0.e0
-           call calStrainDiagonal(nx,nz,ux,uz,lmargin,rmargin,singleStrainDiagonal)
-           call calStrainShear(nx,nz,ux,uz,lmargin,rmargin,singleStrainShear)
+           tmpsingleStrain4comp=0.e0
+           !call calStrainDiagonal(nx,nz,ux,uz,lmargin,rmargin,singleStrainDiagonal)
+           !call calStrainShear(nx,nz,ux,uz,lmargin,rmargin,singleStrainShear)
+
+           call calStrain(nx,nz,ux,uz,lmargin,rmargin,singleStrainDiagonal,singleStrainShear,singleStrain)
+
+           
+           if(optimise) then
+              write(outfile,'("strain",I5,".",I5,".",I5,".OPT_dat") ') it,isx-lmargin(1),isz-lmargin(2)
+           else
+              write(outfile,'("strain",I5,".",I5,".",I5,".CON_dat") ') it,isx-lmargin(1),isz-lmargin(2)
+           endif
+           do j=1,24
+              if(outfile(j:j).eq.' ') outfile(j:j)='0'
+           enddo
+           
+           outfile = './strains/'//trim(modelname)//'/'//outfile
+           open(1,file=outfile,form='unformatted',access='direct',recl=recl_size*4)
+
+           tmpsingleStrain4comp(1:4,1:nx+1-lmargin(1)-rmargin(1),1:nz+1-lmargin(2)-rmargin(2)) = &
+                singleStrain(1:4,lmargin(1)+1:nx+1-rmargin(1),lmargin(2)+1:nz+1-rmargin(2))
+           write(1,rec=1)  tmpsingleStrain4comp
+           close(1,status='keep')
+
 
 
            if(optimise) then

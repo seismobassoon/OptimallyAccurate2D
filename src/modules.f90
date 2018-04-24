@@ -133,7 +133,7 @@ module parameters
   
   
   real(kind(0e0)), allocatable, dimension(:,:):: singleStrainDiagonal,singleStrainShear,tmpsingleStrain
-
+  real(kind(0e0)), allocatable, dimension(:,:,:) :: singleStrain,tmpsingleStrain4comp 
   
   character(440) :: commandline
   
