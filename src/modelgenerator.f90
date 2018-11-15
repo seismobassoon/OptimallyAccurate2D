@@ -27,8 +27,11 @@ program generator
 
 !************************************************************************
 ! Model initialization	
- NX_TOTAL = (601-1)*times+1
- NZ_TOTAL = (161-1)*times+1
+! NX_TOTAL = (601-1)*times+1
+! NZ_TOTAL = (161-1)*times+1
+
+NX_TOTAL=300
+NZ_TOTAL=100
 
 !*** Thikness, Vp, Vs *******************************************		
 
@@ -169,9 +172,9 @@ program generator
 
 !****************************************************************	   
  
- open (1,file='../models/2d_anais.vp',form='unformatted',access='direct',recl=recl_size)
- open (2,file='../models/2d_anais.vs',form='unformatted',access='direct',recl=recl_size) 
- open (3,file='../models/2d_anais.rho',form='unformatted',access='direct',recl=recl_size)
+ open (1,file='../models/Takashi.vp',form='unformatted',access='direct',recl=recl_size)
+ open (2,file='../models/Takashi.vs',form='unformatted',access='direct',recl=recl_size) 
+ open (3,file='../models/Takashi.rho',form='unformatted',access='direct',recl=recl_size)
 
 
 

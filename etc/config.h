@@ -1,4 +1,5 @@
-CC=icc
+##CC=icc
+CC=gcc
 #FC=mpif90 
 #FC=mpiifort
 FC=gfortran
